@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Skill(frontend-design)",
+      "Bash(find frontend/src/app -name \"*.tsx\" -exec grep -l \"task\\|todo\" {} ;)",
+      "Bash(npm install framer-motion)",
+      "Bash(npm run dev)",
+      "Bash(npm install lucide-react)",
+      "Bash(mkdir -p \"frontend/src/app/temp_pages\")"
+    ]
+  }
+}

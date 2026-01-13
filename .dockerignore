@@ -1,0 +1,14 @@
+node_modules/
+dist/
+build/
+*.log
+.env*
+.git/
+Dockerfile*
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.egg-info/
+.vscode/
+.idea/

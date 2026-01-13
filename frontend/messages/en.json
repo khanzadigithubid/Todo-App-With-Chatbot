@@ -1,0 +1,11 @@
+{
+  "Common": {
+    "hello": "Hello",
+    "welcome": "Welcome",
+    "home": "Home",
+    "about": "About"
+  },
+  "Page": {
+    "title": "English Website"
+  }
+}

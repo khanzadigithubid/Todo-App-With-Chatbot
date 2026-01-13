@@ -1,0 +1,437 @@
+# API Contract: MCP Tools for Task Management
+
+## Overview
+This document defines the MCP (Model Context Protocol) tools for task management operations. These tools will be used by the chatbot agent to perform task operations (add, list, complete, delete, update) through the MCP protocol.
+
+## Tool: add_task
+Adds a new task to the user's task list.
+
+### Parameters
+```json
+{
+  "title": {
+    "type": "string",
+    "description": "Title of the task (1-200 characters)",
+    "required": true
+  },
+  "description": {
+    "type": "string",
+    "description": "Detailed description of the task",
+    "required": false
+  },
+  "user_id": {
+    "type": "string",
+    "description": "UUID of the user for whom the task is being added",
+    "required": true
+  },
+  "priority": {
+    "type": "string",
+    "description": "Priority level of the task",
+    "enum": ["low", "medium", "high"],
+    "default": "medium",
+    "required": false
+  },
+  "due_date": {
+    "type": "string",
+    "format": "date-time",
+    "description": "Deadline for the task in ISO 8601 format",
+    "required": false
+  }
+}
+```
+
+### Return Value
+```json
+{
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "UUID of the created task"
+    },
+    "title": {
+      "type": "string",
+      "description": "Title of the created task"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description of the created task"
+    },
+    "status": {
+      "type": "string",
+      "description": "Status of the created task",
+      "enum": ["pending", "completed"]
+    },
+    "priority": {
+      "type": "string",
+      "description": "Priority level of the created task",
+      "enum": ["low", "medium", "high"]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp when the task was created"
+    },
+    "due_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Deadline for the task in ISO 8601 format"
+    }
+  }
+}
+```
+
+### Example Request
+```json
+{
+  "title": "Buy groceries",
+  "description": "Milk, eggs, bread, and fruits",
+  "user_id": "00000000-0000-0000-0000-000000000001",
+  "priority": "medium",
+  "due_date": "2025-01-15T10:00:00Z"
+}
+```
+
+### Example Response
+```json
+{
+  "id": "123e4567-e89b-12d3-a456-426614174000",
+  "title": "Buy groceries",
+  "description": "Milk, eggs, bread, and fruits",
+  "status": "pending",
+  "priority": "medium",
+  "created_at": "2025-01-08T10:00:00Z",
+  "due_date": "2025-01-15T10:00:00Z"
+}
+```
+
+## Tool: list_tasks
+Retrieves all tasks for a specific user.
+
+### Parameters
+```json
+{
+  "user_id": {
+    "type": "string",
+    "description": "UUID of the user whose tasks are being retrieved",
+    "required": true
+  },
+  "status_filter": {
+    "type": "string",
+    "description": "Filter tasks by status",
+    "enum": ["pending", "completed", "all"],
+    "default": "all",
+    "required": false
+  },
+  "priority_filter": {
+    "type": "string",
+    "description": "Filter tasks by priority",
+    "enum": ["low", "medium", "high", "all"],
+    "default": "all",
+    "required": false
+  }
+}
+```
+
+### Return Value
+```json
+{
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "description": "UUID of the task"
+      },
+      "title": {
+        "type": "string",
+        "description": "Title of the task"
+      },
+      "description": {
+        "type": "string",
+        "description": "Description of the task"
+      },
+      "status": {
+        "type": "string",
+        "description": "Status of the task",
+        "enum": ["pending", "completed"]
+      },
+      "priority": {
+        "type": "string",
+        "description": "Priority level of the task",
+        "enum": ["low", "medium", "high"]
+      },
+      "created_at": {
+        "type": "string",
+        "format": "date-time",
+        "description": "Timestamp when the task was created"
+      },
+      "due_date": {
+        "type": "string",
+        "format": "date-time",
+        "description": "Deadline for the task in ISO 8601 format"
+      }
+    }
+  }
+}
+```
+
+### Example Request
+```json
+{
+  "user_id": "00000000-0000-0000-0000-000000000001",
+  "status_filter": "pending"
+}
+```
+
+### Example Response
+```json
+[
+  {
+    "id": "123e4567-e89b-12d3-a456-426614174000",
+    "title": "Buy groceries",
+    "description": "Milk, eggs, bread, and fruits",
+    "status": "pending",
+    "priority": "medium",
+    "created_at": "2025-01-08T10:00:00Z",
+    "due_date": "2025-01-15T10:00:00Z"
+  },
+  {
+    "id": "123e4567-e89b-12d3-a456-426614174001",
+    "title": "Finish report",
+    "description": "Complete the quarterly report",
+    "status": "pending",
+    "priority": "high",
+    "created_at": "2025-01-07T09:00:00Z",
+    "due_date": "2025-01-10T17:00:00Z"
+  }
+]
+```
+
+## Tool: update_task
+Updates an existing task.
+
+### Parameters
+```json
+{
+  "task_id": {
+    "type": "string",
+    "description": "UUID of the task to be updated",
+    "required": true
+  },
+  "user_id": {
+    "type": "string",
+    "description": "UUID of the user who owns the task",
+    "required": true
+  },
+  "title": {
+    "type": "string",
+    "description": "New title of the task (1-200 characters)",
+    "required": false
+  },
+  "description": {
+    "type": "string",
+    "description": "New description of the task",
+    "required": false
+  },
+  "status": {
+    "type": "string",
+    "description": "New status of the task",
+    "enum": ["pending", "completed"],
+    "required": false
+  },
+  "priority": {
+    "type": "string",
+    "description": "New priority level of the task",
+    "enum": ["low", "medium", "high"],
+    "required": false
+  },
+  "due_date": {
+    "type": "string",
+    "format": "date-time",
+    "description": "New deadline for the task in ISO 8601 format",
+    "required": false
+  }
+}
+```
+
+### Return Value
+```json
+{
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "UUID of the updated task"
+    },
+    "title": {
+      "type": "string",
+      "description": "Updated title of the task"
+    },
+    "description": {
+      "type": "string",
+      "description": "Updated description of the task"
+    },
+    "status": {
+      "type": "string",
+      "description": "Updated status of the task",
+      "enum": ["pending", "completed"]
+    },
+    "priority": {
+      "type": "string",
+      "description": "Updated priority level of the task",
+      "enum": ["low", "medium", "high"]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp when the task was created"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp when the task was last updated"
+    },
+    "due_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Updated deadline for the task in ISO 8601 format"
+    }
+  }
+}
+```
+
+### Example Request
+```json
+{
+  "task_id": "123e4567-e89b-12d3-a456-426614174000",
+  "user_id": "00000000-0000-0000-0000-000000000001",
+  "status": "completed",
+  "priority": "high"
+}
+```
+
+### Example Response
+```json
+{
+  "id": "123e4567-e89b-12d3-a456-426614174000",
+  "title": "Buy groceries",
+  "description": "Milk, eggs, bread, and fruits",
+  "status": "completed",
+  "priority": "high",
+  "created_at": "2025-01-08T10:00:00Z",
+  "updated_at": "2025-01-08T11:00:00Z",
+  "due_date": "2025-01-15T10:00:00Z"
+}
+```
+
+## Tool: delete_task
+Deletes an existing task.
+
+### Parameters
+```json
+{
+  "task_id": {
+    "type": "string",
+    "description": "UUID of the task to be deleted",
+    "required": true
+  },
+  "user_id": {
+    "type": "string",
+    "description": "UUID of the user who owns the task",
+    "required": true
+  }
+}
+```
+
+### Return Value
+```json
+{
+  "type": "object",
+  "properties": {
+    "success": {
+      "type": "boolean",
+      "description": "Whether the deletion was successful"
+    },
+    "message": {
+      "type": "string",
+      "description": "Message about the deletion result"
+    }
+  }
+}
+```
+
+### Example Request
+```json
+{
+  "task_id": "123e4567-e89b-12d3-a456-426614174000",
+  "user_id": "00000000-0000-0000-0000-000000000001"
+}
+```
+
+### Example Response
+```json
+{
+  "success": true,
+  "message": "Task deleted successfully"
+}
+```
+
+## Tool: toggle_task_completion
+Toggles the completion status of a task.
+
+### Parameters
+```json
+{
+  "task_id": {
+    "type": "string",
+    "description": "UUID of the task to toggle",
+    "required": true
+  },
+  "user_id": {
+    "type": "string",
+    "description": "UUID of the user who owns the task",
+    "required": true
+  }
+}
+```
+
+### Return Value
+```json
+{
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "UUID of the toggled task"
+    },
+    "status": {
+      "type": "string",
+      "description": "New status of the task after toggle",
+      "enum": ["pending", "completed"]
+    },
+    "title": {
+      "type": "string",
+      "description": "Title of the task"
+    }
+  }
+}
+```
+
+### Example Request
+```json
+{
+  "task_id": "123e4567-e89b-12d3-a456-426614174000",
+  "user_id": "00000000-0000-0000-0000-000000000001"
+}
+```
+
+### Example Response
+```json
+{
+  "id": "123e4567-e89b-12d3-a456-426614174000",
+  "status": "completed",
+  "title": "Buy groceries"
+}
+```
