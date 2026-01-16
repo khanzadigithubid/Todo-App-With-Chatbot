@@ -18,16 +18,16 @@ interface TaskCardProps {
 
 export default function TaskCard({ task, refreshTasks, onSelectToggle, isSelected }: TaskCardProps) {
   const [isEditing, setIsEditing] = useState(false);
-  const { addToast } = useToast();
+  const { showToast } = useToast();
 
   const handleDelete = async () => {
     if (confirm('Are you sure you want to delete this task?')) {
       try {
         await deleteTask(task.id);
-        addToast('Task deleted successfully!', 'success');
+        showToast('Task deleted successfully!', 'success');
         refreshTasks();
       } catch (error: any) {
-        addToast(`Error deleting task: ${error.message}`, 'error');
+        showToast(`Error deleting task: ${error.message}`, 'error');
       }
     }
   };
@@ -35,10 +35,10 @@ export default function TaskCard({ task, refreshTasks, onSelectToggle, isSelecte
   const handleToggleComplete = async () => {
     try {
       await toggleTaskCompletion(task.id);
-      addToast(`Task marked ${task.status === 'completed' ? 'pending' : 'completed'}!`, 'success');
+      showToast(`Task marked ${task.status === 'completed' ? 'pending' : 'completed'}!`, 'success');
       refreshTasks();
     } catch (error: any) {
-      addToast(`Error updating task status: ${error.message}`, 'error');
+      showToast(`Error updating task status: ${error.message}`, 'error');
     }
   };
 

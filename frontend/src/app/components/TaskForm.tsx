@@ -1,15 +1,17 @@
 'use client';
 
-import { useState } from 'react';
-import { createTask } from '@/services/api';
-import { Task } from '@/app/types/task';
+import { useState, useEffect } from 'react';
+import { createTask, updateTask } from '@/services/api';
+import { Task, TaskCreate } from '@/app/types/task';
 import { useToast } from './ToastProvider';
 
 interface TaskFormProps {
   refreshTasks: () => void;
+  editingTask?: Task;
+  onCloseEdit?: () => void;
 }
 
-export default function TaskForm({ refreshTasks }: TaskFormProps) {
+export default function TaskForm({ refreshTasks, editingTask, onCloseEdit }: TaskFormProps) {
   const { showToast } = useToast();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -17,30 +19,60 @@ export default function TaskForm({ refreshTasks }: TaskFormProps) {
   const [dueDate, setDueDate] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
+  // Populate form with editing task data
+  useEffect(() => {
+    if (editingTask) {
+      setTitle(editingTask.title);
+      setDescription(editingTask.description || '');
+      setPriority(editingTask.priority as 'low' | 'medium' | 'high');
+      setDueDate(editingTask.due_date || '');
+    } else {
+      // Reset form for new task
+      setTitle('');
+      setDescription('');
+      setPriority('medium');
+      setDueDate('');
+    }
+  }, [editingTask]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim()) return;
 
     setIsLoading(true);
     try {
-      const newTask: Omit<Task, 'id' | 'created_at' | 'updated_at' | 'status'> = {
-        title: title.trim(),
-        description: description.trim(),
-        priority,
-        due_date: dueDate || null,
-        status: 'pending',
-      };
+      if (editingTask) {
+        // Update existing task
+        await updateTask(editingTask.id, {
+          title: title.trim(),
+          description: description.trim(),
+          priority,
+          due_date: dueDate || undefined,
+        });
+        showToast('Task updated successfully', 'success');
+        if (onCloseEdit) onCloseEdit();
+      } else {
+        // Create new task
+        const newTask: TaskCreate = {
+          title: title.trim(),
+          description: description.trim(),
+          priority,
+          due_date: dueDate || undefined,
+          status: 'pending',
+        };
 
-      await createTask(newTask);
-      setTitle('');
-      setDescription('');
-      setPriority('medium');
-      setDueDate('');
+        await createTask(newTask);
+        setTitle('');
+        setDescription('');
+        setPriority('medium');
+        setDueDate('');
+        showToast('Task created successfully', 'success');
+      }
+
       refreshTasks();
-      showToast('Task created successfully', 'success');
     } catch (error) {
-      console.error('Error creating task:', error);
-      showToast('Failed to create task', 'error');
+      console.error('Error saving task:', error);
+      showToast(`Failed to ${editingTask ? 'update' : 'create'} task`, 'error');
     } finally {
       setIsLoading(false);
     }
@@ -108,7 +140,16 @@ export default function TaskForm({ refreshTasks }: TaskFormProps) {
         </div>
       </div>
 
-      <div className="flex justify-end">
+      <div className="flex justify-end gap-3">
+        {editingTask && onCloseEdit && (
+          <button
+            type="button"
+            onClick={onCloseEdit}
+            className="px-5 py-2.5 rounded-xl font-semibold bg-surface-light text-text-secondary border border-border hover:bg-surface transition-all duration-300"
+          >
+            Cancel
+          </button>
+        )}
         <button
           type="submit"
           disabled={isLoading || !title.trim()}
@@ -124,10 +165,10 @@ export default function TaskForm({ refreshTasks }: TaskFormProps) {
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
-              Creating...
+              {editingTask ? 'Updating...' : 'Creating...'}
             </span>
           ) : (
-            'Create Task'
+            editingTask ? 'Update Task' : 'Create Task'
           )}
         </button>
       </div>

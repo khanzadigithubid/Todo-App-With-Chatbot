@@ -17,7 +17,13 @@ import {
   SunIcon
 } from '@heroicons/react/24/outline';
 
-const navItems = [
+interface NavItem {
+  name: string;
+  icon: React.ComponentType<{ className?: string }>;
+  href: string;
+}
+
+const navItems: NavItem[] = [
   { name: 'Dashboard', icon: HomeIcon, href: '/dashboard' },
   { name: 'Tasks', icon: ClipboardDocumentListIcon, href: '/dashboard/tasks' },
   { name: 'AI Chatbot', icon: ChatBubbleLeftRightIcon, href: '/chat' },
@@ -86,7 +92,7 @@ export default function Sidebar({ isOpen, toggleSidebar, onThemeToggle, isDarkMo
               return (
                 <li key={item.name}>
                   <Link
-                    href={item.href}
+                    href={item.href as any}
                     className={`group flex items-center gap-3 w-full p-3.5 rounded-xl transition-all duration-200 ${
                       isActive
                         ? 'bg-gradient-to-r from-primary/10 to-accent/10 text-primary shadow-sm border border-primary/20'
@@ -123,8 +129,15 @@ export default function Sidebar({ isOpen, toggleSidebar, onThemeToggle, isDarkMo
 
             {/* Logout */}
             <li className="mt-4 pt-4 border-t border-border">
-              <Link
-                href="/logout"
+              <button
+                onClick={() => {
+                  // Clear any stored authentication data
+                  localStorage.removeItem('token');
+                  sessionStorage.removeItem('token');
+
+                  // Redirect to login page
+                  window.location.href = '/login';
+                }}
                 className="group flex items-center gap-3 w-full p-3.5 rounded-xl transition-all duration-200 text-text-secondary hover:bg-surface-light hover:text-error"
               >
                 <div className="p-1.5 rounded-lg bg-surface-light">
@@ -133,7 +146,7 @@ export default function Sidebar({ isOpen, toggleSidebar, onThemeToggle, isDarkMo
                 <span className={`${isCollapsed ? 'hidden' : ''} text-sm font-medium transition-opacity duration-300`}>
                   Logout
                 </span>
-              </Link>
+              </button>
             </li>
           </ul>
         </nav>

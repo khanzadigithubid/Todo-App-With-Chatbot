@@ -58,7 +58,7 @@ export default function Header({ sidebarOpen, toggleSidebar, onThemeToggle, isDa
                   </li>
                   <li>
                     <Link
-                      href={pathname}
+                      href="/"
                       className="capitalize text-text-secondary hover:text-primary transition-colors"
                     >
                       {pathname.split('/').pop() || 'Dashboard'}
