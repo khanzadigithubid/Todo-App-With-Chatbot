@@ -42,6 +42,8 @@ This project demonstrates the evolution of a simple todo application from a cons
 - TypeScript
 - Tailwind CSS
 - OpenAI ChatKit
+- Framer Motion (animations)
+- Heroicons (UI icons)
 
 ### Backend
 - Python FastAPI
@@ -49,6 +51,8 @@ This project demonstrates the evolution of a simple todo application from a cons
 - Neon Serverless PostgreSQL
 - OpenAI Agents SDK
 - MCP Protocol
+- aiokafka (Kafka integration)
+- Dapr (Distributed Application Runtime)
 
 ### Infrastructure
 - Docker
@@ -60,6 +64,10 @@ This project demonstrates the evolution of a simple todo application from a cons
 
 ### Authentication
 - Better Auth with JWT tokens
+
+### Monitoring
+- Prometheus (metrics)
+- Grafana (dashboards)
 
 ## Features
 
@@ -78,6 +86,8 @@ This project demonstrates the evolution of a simple todo application from a cons
 ### Advanced Level
 - Recurring Tasks – Auto-reschedule repeating tasks (e.g., "weekly meeting")
 - Due Dates & Time Reminders – Set deadlines with date/time pickers; browser notifications
+- Event-Driven Architecture – Kafka-based messaging for task operations
+- Dapr Integration – Distributed Application Runtime for microservices
 
 ## Architecture
 
@@ -89,6 +99,53 @@ The application follows a microservices architecture with:
 - AI/MCP service (OpenAI Agents + MCP)
 - Event streaming (Kafka/Redpanda)
 - Service mesh (Dapr)
+
+### Phase V Architecture Details
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│                              CLOUD/KUBERNETES CLUSTER                               │
+│                                                                                     │
+│  ┌─────────────────────┐  ┌─────────────────────┐  ┌─────────────────────────────┐ │
+│  │    Frontend Pod     │  │    Backend Pod      │  │   Notification Service      │ │
+│  │ ┌─────────┐ ┌─────┐ │  │ ┌─────────┐ ┌─────┐ │  │        Pod                  │ │
+│  │ │ Next.js │ │Dapr │ │  │ │FastAPI  │ │Dapr │ │  │ ┌─────────────┐ ┌─────────┐ │ │
+│  │ │  App    │ │Side │ │  │ │+MCP+AI  │ │Side │ │  │ │Notification │ │  Dapr   │ │ │
+│  │ │         │ │car  │ │  │ │         │ │car  │ │  │ │   Service   │ │  Side   │ │ │
+│  │ └─────────┘ └─────┘ │  │ └─────────┘ └─────┘ │  │ │             │ │  Car    │ │ │
+│  └─────────┬───────────┘  └─────────┬───────────┘  │ └─────────────┘ └─────────┘ │ │
+│            │                         │              └─────────────┬─────────────────┘ │
+│            │                         │                            │                   │
+│            └─────────────────────────┼────────────────────────────┼───────────────────┘
+│                                      │                            │
+│                                      ▼                            ▼
+│                    ┌─────────────────────────────┐  ┌─────────────────────────────┐
+│                    │      DAPR RUNTIME          │  │      EVENT PROCESSORS       │
+│                    │     MICROSERVICES          │  │        SERVICES             │
+│                    │                            │  │                             │
+│                    │ • Pub/Sub (Kafka)         │  │ • Recurring Task Service    │
+│                    │ • State Management        │  │ • Reminder Service          │
+│                    │ • Service Invocation      │  │ • Audit Service             │
+│                    │ • Secret Management       │  │ • WebSocket Service         │
+│                    │ • Job Scheduler           │  │                             │
+│                    └─────────────┬─────────────┘  └─────────────┬─────────────────┘
+│                                  │                              │
+│                                  ▼                              ▼
+│                    ┌─────────────────────────────────────────────────────────────────┐
+│                    │                KAFKA/REDDRANDA CLUSTER                        │
+│                    │  ┌─────────────┐  ┌─────────────────────┐  ┌─────────────────┐ │
+│                    │ │ task-events │  │     reminders       │  │ task-updates    │ │
+│                    │ └─────────────┘  └─────────────────────┘  └─────────────────┘ │
+│                    └─────────────────────────┬───────────────────────────────────────┘
+│                                              │
+│                                              ▼
+│                    ┌─────────────────────────────────────────────────────────────────┐
+│                    │                    EXTERNAL SERVICES                          │
+│                    │                                                               │
+│                    │ • Neon PostgreSQL (Task/Conversation Data)                    │
+│                    │ • OpenAI API (AI Assistant)                                   │
+│                    │ • Cloud Storage (File Attachments)                            │
+│                    └─────────────────────────────────────────────────────────────────┘
+└──────────────────────────────────────────────────────────────────────────────────────┘
 
 ## Setup Instructions
 

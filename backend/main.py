@@ -10,6 +10,10 @@ from backend.database import engine
 from backend.api.endpoints import tasks, users, auth, chat
 from backend.middleware import JWTAuthMiddleware
 
+# Import Kafka components
+from backend.events.kafka_producer import init_kafka_producer, close_kafka_producer
+from backend.events.kafka_consumer import init_kafka_consumer, close_kafka_consumer
+
 # Load environment variables from .env file
 load_dotenv()
 
@@ -63,17 +67,36 @@ app.add_middleware(JWTAuthMiddleware)
 
 
 @app.on_event("startup")
-def on_startup():
+async def on_startup():
     try:
         logger.info("Initializing database tables...")
         # Attempt to create tables with a connection test first
         SQLModel.metadata.create_all(engine)
         logger.info("Database tables initialized successfully")
+        
+        # Initialize Kafka producer and consumer
+        logger.info("Initializing Kafka producer and consumer...")
+        await init_kafka_producer()
+        await init_kafka_consumer()
+        logger.info("Kafka producer and consumer initialized successfully")
     except Exception as e:
-        logger.error(f"Error initializing database: {e}")
+        logger.error(f"Error initializing application: {e}")
         import traceback
         logger.error(f"Full traceback: {traceback.format_exc()}")
         raise
+
+
+@app.on_event("shutdown")
+async def on_shutdown():
+    try:
+        logger.info("Shutting down Kafka producer and consumer...")
+        await close_kafka_producer()
+        await close_kafka_consumer()
+        logger.info("Kafka producer and consumer shut down successfully")
+    except Exception as e:
+        logger.error(f"Error during shutdown: {e}")
+        import traceback
+        logger.error(f"Full traceback: {traceback.format_exc()}")
 
 
 app.include_router(users.router, prefix="/api/users", tags=["users"])

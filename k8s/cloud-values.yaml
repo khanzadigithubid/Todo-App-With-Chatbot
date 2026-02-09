@@ -1,0 +1,56 @@
+# k8s/cloud-values.yaml
+# Cloud-specific values for deploying to AKS/GKE
+
+# Replica count for production
+replicaCount: 3
+
+image:
+  repository: ghcr.io/YOUR_GITHUB_USERNAME/todo-backend
+  pullPolicy: Always
+  tag: "latest"
+
+service:
+  type: LoadBalancer
+  port: 8000
+
+# Resources for production
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 250m
+    memory: 256Mi
+
+# Autoscaling for production
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 80
+
+# Dapr configuration
+dapr:
+  enabled: true
+  appId: "todo-backend"
+  appPort: 8000
+  config: "dapr-config"
+
+# Kafka configuration - update with your cloud Kafka/Redpanda settings
+kafka:
+  bootstrapServers: "your-redpanda-cluster.example.com:9092"  # Update with your Kafka/Redpanda endpoint
+  topics:
+    taskEvents: "task-events"
+    reminders: "reminders"
+
+# Database configuration - update with your production database URL
+database:
+  url: "postgresql://username:password@your-db-host:5432/todo_db"  # Update with your DB URL
+
+# Authentication configuration - update with your production secret
+auth:
+  secret: "your-production-auth-secret"  # Update with your auth secret
+
+# OpenAI configuration - update with your production API key
+openai:
+  apiKey: "your-openai-api-key"  # Update with your OpenAI API key

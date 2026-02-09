@@ -1,0 +1,33 @@
+# dapr/components/pubsub.yaml
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: kafka-pubsub
+spec:
+  type: pubsub.kafka
+  version: v1
+  metadata:
+    # Kafka broker connection setting
+    - name: brokers
+      value: "localhost:9092" # Update this for your Kafka setup
+    # Specify the name of the consumer group
+    - name: consumerGroup
+      value: "todo-app-group"
+    # Comma (,) separated list of the topics
+    - name: topics
+      value: "task-events,reminders"
+    # Toggle to enable TLS
+    - name: enableTLS
+      value: "false"
+    # SASL/PLAIN username
+    - name: saslUsername
+      value: ""
+    # SASL/PLAIN password
+    - name: saslPassword
+      value: ""
+    # Mechanism for SASL
+    - name: saslMechanism
+      value: "PLAIN"
+    # Replication factor
+    - name: replicationFactor
+      value: "1"

@@ -21,5 +21,8 @@ COPY . .
 # Expose the port the app runs on
 EXPOSE 8000
 
-# Run the application
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Install Dapr CLI
+RUN wget -q https://raw.githubusercontent.com/dapr/cli/master/install/install.sh -O - | /bin/bash
+
+# Run the application with Dapr
+CMD ["sh", "-c", "dapr run --app-id todo-backend --app-port 8000 --dapr-http-port 3500 -- uvicorn backend.main:app --host 0.0.0.0 --port 8000"]

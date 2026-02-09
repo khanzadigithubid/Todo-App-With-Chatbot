@@ -1,0 +1,52 @@
+# k8s/local-values.yaml
+# Local values for deploying to Minikube
+
+replicaCount: 1
+
+image:
+  repository: todo-backend
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+service:
+  type: LoadBalancer
+  port: 8000
+
+# Minimal resources for local development
+resources: {}
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+# Disable autoscaling for local development
+autoscaling:
+  enabled: false
+
+# Dapr configuration
+dapr:
+  enabled: true
+  appId: "todo-backend"
+  appPort: 8000
+  config: "dapr-config"
+
+# Kafka configuration for local Minikube
+kafka:
+  bootstrapServers: "kafka:9092"  # Kafka service in the same namespace
+  topics:
+    taskEvents: "task-events"
+    reminders: "reminders"
+
+# Database configuration - update with your local database URL
+database:
+  url: "postgresql://username:password@neon-db-host:5432/todo_local"  # Update with your local DB URL
+
+# Authentication configuration
+auth:
+  secret: "your-local-auth-secret"  # Update with your local auth secret
+
+# OpenAI configuration
+openai:
+  apiKey: "your-openai-api-key"  # Update with your OpenAI API key

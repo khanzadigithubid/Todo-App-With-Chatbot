@@ -1,0 +1,66 @@
+# .github/workflows/deploy.yml
+name: Deploy to Kubernetes
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Log in to container registry
+      uses: docker/login-action@v2
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Build and push backend image
+      uses: docker/build-push-action@v4
+      with:
+        context: ./backend
+        file: ./backend/Dockerfile
+        push: true
+        tags: |
+          ghcr.io/${{ github.repository }}/todo-backend:${{ github.sha }}
+          ghcr.io/${{ github.repository }}/todo-backend:latest
+
+    - name: Set up kubectl
+      uses: azure/setup-kubectl@v3
+      with:
+        version: 'latest'
+
+    - name: Set up Dapr
+      run: |
+        wget -q https://raw.githubusercontent.com/dapr/cli/master/install/install.sh -O - | /bin/bash
+
+    - name: Configure kubectl for cloud cluster
+      run: |
+        # This step would configure kubectl to connect to your cloud cluster
+        # The exact command depends on your cloud provider (AKS, GKE, etc.)
+        # For example, for AKS:
+        # az aks get-credentials --resource-group myResourceGroup --name myAKSCluster
+        # For GKE:
+        # gcloud container clusters get-credentials my-cluster --zone us-central1-a --project my-project
+        echo "${{ secrets.KUBE_CONFIG_DATA }}" | base64 -d > kubeconfig
+        export KUBECONFIG=./kubeconfig
+
+    - name: Deploy to Kubernetes
+      run: |
+        # Update image tags in deployment files
+        sed -i 's|todo-backend:latest|ghcr.io/'"${{ github.repository }}"'/todo-backend:${{ github.sha }}|g' k8s/backend-deployment.yaml
+        
+        # Apply Kubernetes manifests
+        kubectl apply -f k8s/
+        
+        # Wait for deployment to be ready
+        kubectl rollout status deployment/todo-backend

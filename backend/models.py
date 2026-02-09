@@ -24,7 +24,8 @@ class Task(SQLModel, table=True):
     priority: str = Field(default="medium", max_length=20)
     categories: Optional[list[str]] = Field(default=None, sa_column=Column(JSON))
     is_recurring: bool = Field(default=False)
-    recurrence_pattern: Optional[str] = Field(default=None, max_length=20)
+    recurrence_pattern: Optional[str] = Field(default=None, max_length=20)  # daily, weekly, monthly, yearly
+    recurrence_end_date: Optional[datetime] = None  # When to stop recurring
     created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
     due_date: Optional[datetime] = None
     updated_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)

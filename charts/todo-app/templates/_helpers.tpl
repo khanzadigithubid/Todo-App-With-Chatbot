@@ -1,3 +1,4 @@
+# charts/todo-app/templates/_helpers.tpl
 {{/*
 Expand the name of the chart.
 */}}
@@ -58,39 +59,5 @@ Create the name of the service account to use
 {{- default (include "todo-app.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
-{{- end }}
-{{- end }}
-
-{{/*
-Create a default fully qualified frontend name.
-*/}}
-{{- define "todo-app.frontend.fullname" -}}
-{{- $frontendName := print .Chart.Name "-frontend" }}
-{{- if .Values.fullnameOverride }}
-{{- printf "%s-frontend" .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
-{{- else }}
-{{- $name := default .Chart.Name .Values.nameOverride }}
-{{- if contains $name .Release.Name }}
-{{- printf "%s-frontend" .Release.Name | trunc 63 | trimSuffix "-" }}
-{{- else }}
-{{- printf "%s-%s-frontend" .Release.Name $name | trunc 63 | trimSuffix "-" }}
-{{- end }}
-{{- end }}
-{{- end }}
-
-{{/*
-Create a default fully qualified backend name.
-*/}}
-{{- define "todo-app.backend.fullname" -}}
-{{- $backendName := print .Chart.Name "-backend" }}
-{{- if .Values.fullnameOverride }}
-{{- printf "%s-backend" .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
-{{- else }}
-{{- $name := default .Chart.Name .Values.nameOverride }}
-{{- if contains $name .Release.Name }}
-{{- printf "%s-backend" .Release.Name | trunc 63 | trimSuffix "-" }}
-{{- else }}
-{{- printf "%s-%s-backend" .Release.Name $name | trunc 63 | trimSuffix "-" }}
-{{- end }}
 {{- end }}
 {{- end }}
