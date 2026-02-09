@@ -1,4 +1,5 @@
 # backend/tools/registry.py
+
 """
 Registry for tools used by the AI assistant
 """

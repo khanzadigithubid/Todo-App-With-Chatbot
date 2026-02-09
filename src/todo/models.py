@@ -1,26 +1,27 @@
+# src/todo/models.py
+
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Optional
-from uuid import uuid4
+from enum import Enum
 
+class Priority(Enum):
+    LOW = "low"
+    MEDIUM = "medium"
+    HIGH = "high"
 
 @dataclass
 class Task:
-    """
-    Represents a todo task with all required attributes.
-    """
-    id: str  # Using string representation of UUID
+    id: int
     title: str
     description: Optional[str] = None
-    status: str = "pending"
+    completed: bool = False
+    priority: Priority = Priority.MEDIUM
     created_at: datetime = None
-    
+    updated_at: datetime = None
+
     def __post_init__(self):
-        """
-        Set the created_at timestamp after initialization if not provided.
-        """
         if self.created_at is None:
             self.created_at = datetime.now()
-    
-    def __str__(self):
-        return f"[{self.status}] {self.title}"
+        if self.updated_at is None:
+            self.updated_at = datetime.now()

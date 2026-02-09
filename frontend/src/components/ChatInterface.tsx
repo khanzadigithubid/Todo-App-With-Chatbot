@@ -1,7 +1,7 @@
 // frontend/src/components/ChatInterface.tsx
 
 import { useState, useRef, useEffect } from 'react';
-import api from '@/lib/api';
+import { chatApi } from '@/lib/api';
 
 interface Message {
   id: string;
@@ -48,7 +48,7 @@ export default function ChatInterface({ userId }: ChatInterfaceProps) {
 
     try {
       // Send message to the backend
-      const response = await api.chatApi.sendMessage(inputValue);
+      const response = await chatApi.sendMessage(inputValue);
 
       // Add assistant response to the chat
       const assistantMessage: Message = {
@@ -80,8 +80,8 @@ export default function ChatInterface({ userId }: ChatInterfaceProps) {
     <div className="chat-interface">
       <div className="chat-messages">
         {messages.map((message) => (
-          <div 
-            key={message.id} 
+          <div
+            key={message.id}
             className={`message ${message.role === 'user' ? 'user-message' : 'assistant-message'}`}
           >
             <div className="message-content">

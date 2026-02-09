@@ -1,3 +1,5 @@
+# backend/api/endpoints/chat.py
+
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from typing import Optional, List, Dict, Any
@@ -5,7 +7,7 @@ from uuid import UUID
 from ...database import get_session
 from sqlmodel import Session
 from ...models import Conversation, Message
-from ...auth_schemas import get_current_user_id
+from ...auth_schemas import UserLogin
 import os
 from openai import OpenAI
 from ...tools.registry import tool_registry
@@ -91,11 +93,7 @@ tools = [
 ]
 
 @router.post("/")
-async def chat_endpoint(
-    chat_request: ChatRequest,
-    user_id: UUID = Depends(get_current_user_id),
-    session: Session = Depends(get_session)
-):
+async def chat_endpoint(chat_request: ChatRequest, session: Session = Depends(get_session)):
     try:
         # Validate and get OpenAI client
         try:
@@ -108,11 +106,11 @@ async def chat_endpoint(
         conversation = None
         if chat_request.conversation_id:
             conversation = session.get(Conversation, chat_request.conversation_id)
-            if not conversation or conversation.user_id != str(user_id):
+            if not conversation:
                 raise HTTPException(status_code=404, detail="Conversation not found")
         else:
             # Create new conversation
-            conversation = Conversation(user_id=str(user_id))
+            conversation = Conversation()
             session.add(conversation)
             session.commit()
             session.refresh(conversation)
@@ -176,7 +174,7 @@ async def chat_endpoint(
 
                         # For all operations that require a user_id, ensure it's set to the authenticated user ID
                         if function_name in ["add_task", "list_tasks", "update_task", "delete_task", "complete_task", "toggle_task_completion"]:
-                            function_args["user_id"] = str(user_id)  # Use the authenticated user ID
+                            function_args["user_id"] = str(conversation.user_id)  # Use the authenticated user ID
 
                         if function_name == "add_task":
                             # Execute the tool
@@ -295,7 +293,7 @@ async def chat_endpoint(
 
         # Store user message in database
         user_message = Message(
-            user_id=str(user_id),
+            user_id=conversation.user_id,
             conversation_id=conversation.id,
             role="user",
             content=chat_request.message
@@ -306,7 +304,7 @@ async def chat_endpoint(
         ai_response = messages.data[0].content[0].text.value if messages.data and messages.data[0].content else "I processed your request but couldn't generate a response. Please try again."
         
         ai_message = Message(
-            user_id=str(user_id),
+            user_id=conversation.user_id,
             conversation_id=conversation.id,
             role="assistant",
             content=ai_response

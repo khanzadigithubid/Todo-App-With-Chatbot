@@ -1,3 +1,5 @@
+# backend/start_server.py
+
 #!/usr/bin/env python
 """
 Enhanced startup script with database readiness check
@@ -21,7 +23,7 @@ def wait_for_db(max_attempts=30, delay=1):
     Wait for the database to be ready before starting the server.
     """
     logger.info("Waiting for database to be ready...")
-    
+
     for attempt in range(max_attempts):
         try:
             with engine.connect() as conn:
@@ -37,7 +39,7 @@ def wait_for_db(max_attempts=30, delay=1):
             if attempt == max_attempts - 1:  # Last attempt
                 raise
             time.sleep(delay)
-    
+
     raise Exception(f"Database not ready after {max_attempts} attempts")
 
 if __name__ == "__main__":
@@ -47,9 +49,9 @@ if __name__ == "__main__":
     try:
         # Wait for database to be ready
         wait_for_db()
-        
+
         logger.info(f"Starting server on {host}:{port}")
-        
+
         # Start the server
         uvicorn.run(
             app,

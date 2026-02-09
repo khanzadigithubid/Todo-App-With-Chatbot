@@ -1,4 +1,5 @@
 # backend/tools/list_tasks.py
+
 """
 Tool for listing tasks from the todo list
 """
@@ -8,6 +9,7 @@ from typing import Optional, List
 from ..database import get_session
 from sqlmodel import Session, select
 from ..models import Task
+from uuid import UUID
 
 class ListTasksTool:
     def __init__(self):
@@ -31,19 +33,21 @@ class ListTasksTool:
         """
         with get_session() as session:
             # Build query based on filters
-            query = select(Task).where(Task.user_id == user_id)
+            query = select(Task).where(Task.user_id == UUID(user_id))
             
             if status and status != "all":
                 if status == "pending":
-                    query = query.where(Task.completed == False)
+                    query = query.where(Task.status == "pending")
                 elif status == "completed":
-                    query = query.where(Task.completed == True)
+                    query = query.where(Task.status == "completed")
             
             if priority:
                 query = query.where(Task.priority == priority)
                 
             if category:
-                query = query.where(Task.category == category)
+                # Assuming categories is a list field in the Task model
+                # This is a simplified implementation - in practice, you might need to handle JSON queries differently
+                query = query.where(Task.categories.contains([category]))
             
             tasks = session.exec(query).all()
             
@@ -51,13 +55,13 @@ class ListTasksTool:
             task_list = []
             for task in tasks:
                 task_dict = {
-                    "id": task.id,
+                    "id": str(task.id),
                     "title": task.title,
                     "description": task.description,
-                    "completed": task.completed,
+                    "completed": task.status == "completed",
                     "priority": task.priority,
-                    "category": task.category,
-                    "due_date": task.due_date,
+                    "categories": task.categories,
+                    "due_date": task.due_date.isoformat() if task.due_date else None,
                     "created_at": task.created_at.isoformat() if task.created_at else None,
                     "updated_at": task.updated_at.isoformat() if task.updated_at else None
                 }

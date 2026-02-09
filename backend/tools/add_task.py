@@ -1,4 +1,5 @@
 # backend/tools/add_task.py
+
 """
 Tool for adding tasks to the todo list
 """
@@ -8,7 +9,7 @@ from typing import Optional
 from ..database import get_session
 from sqlmodel import Session
 from ..models import Task
-import uuid
+from uuid import UUID
 
 class AddTaskTool:
     def __init__(self):
@@ -36,13 +37,12 @@ class AddTaskTool:
         with get_session() as session:
             # Create a new task
             task = Task(
-                user_id=user_id,
+                user_id=UUID(user_id),
                 title=title,
                 description=description,
                 priority=priority,
-                category=category,
-                due_date=due_date,
-                completed=False
+                categories=[category] if category else [],
+                due_date=due_date
             )
             
             session.add(task)
@@ -50,13 +50,13 @@ class AddTaskTool:
             session.refresh(task)
             
             return {
-                "id": task.id,
+                "id": str(task.id),
                 "title": task.title,
                 "description": task.description,
-                "completed": task.completed,
+                "completed": task.status == "completed",
                 "priority": task.priority,
-                "category": task.category,
-                "due_date": task.due_date,
+                "categories": task.categories,
+                "due_date": task.due_date.isoformat() if task.due_date else None,
                 "created_at": task.created_at.isoformat() if task.created_at else None,
                 "updated_at": task.updated_at.isoformat() if task.updated_at else None
             }
