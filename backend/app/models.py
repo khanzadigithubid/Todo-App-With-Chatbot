@@ -27,3 +27,19 @@ class Task(SQLModel, table=True):
     due_date: Optional[datetime] = None # New field
     updated_at: datetime = Field(default_factory=datetime.utcnow, nullable=False) # Updated to be more compatible
     user: User = Relationship(back_populates="tasks")
+
+class Conversation(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    user_id: str = Field(index=True)  # Store as string since we're using UUID from JWT
+    created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+    updated_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+    messages: List["Message"] = Relationship(back_populates="conversation")
+
+class Message(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    user_id: str = Field(index=True)  # Store as string since we're using UUID from JWT
+    conversation_id: int = Field(foreign_key="conversation.id")
+    role: str = Field(max_length=20)  # 'user' or 'assistant'
+    content: str
+    created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+    conversation: Conversation = Relationship(back_populates="messages")

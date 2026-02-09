@@ -22,37 +22,47 @@ logger = logging.getLogger(__name__)
 app = FastAPI()
 
 # Add CORS middleware with comprehensive configuration
+# Get allowed origins from environment variable or use defaults
+allowed_origins_env = os.getenv("ALLOWED_ORIGINS", "")
+allowed_origins = [origin.strip() for origin in allowed_origins_env.split(",") if origin.strip()] if allowed_origins_env else []
+
+# Add default development origins
+default_origins = [
+    "http://localhost:3000",      # Next.js default port
+    "http://127.0.0.1:3000",     # Next.js default port (IPv4)
+    "http://localhost:3001",      # Alternative Next.js port
+    "http://127.0.0.1:3001",     # Alternative Next.js port (IPv4)
+    "http://localhost:8000",      # Backend server (for direct testing)
+    "http://127.0.0.1:8000",     # Backend server (IPv4)
+    "https://localhost:3000",     # HTTPS (if using)
+    "https://127.0.0.1:3000",    # HTTPS (IPv4)
+    "http://localhost:3002",      # Additional Next.js port
+    "http://127.0.0.1:3002",     # Additional Next.js port (IPv4)
+    "http://localhost:3003",      # Additional Next.js port
+    "http://127.0.0.1:3003",     # Additional Next.js port (IPv4)
+    "http://localhost:3004",      # Additional Next.js port
+    "http://127.0.0.1:3004",     # Additional Next.js port (IPv4)
+    "http://localhost:3005",      # Additional Next.js port
+    "http://127.0.0.1:3005",     # Additional Next.js port (IPv4)
+    "http://localhost:3006",      # Additional Next.js port
+    "http://127.0.0.1:3006",     # Additional Next.js port (IPv4)
+    "http://localhost:3007",      # Additional Next.js port
+    "http://127.0.0.1:3007",     # Additional Next.js port (IPv4)
+    "http://localhost:3008",      # Additional Next.js port
+    "http://127.0.0.1:3008",     # Additional Next.js port (IPv4)
+    "http://localhost:3009",      # Additional Next.js port
+    "http://127.0.0.1:3009",     # Additional Next.js port (IPv4)
+    "http://localhost:3010",      # Additional Next.js port
+    "http://127.0.0.1:3010",     # Additional Next.js port (IPv4)
+    "https://*.vercel.app",       # Vercel deployments
+]
+
+# Combine default and environment-specific origins
+all_origins = default_origins + allowed_origins
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",      # Next.js default port
-        "http://127.0.0.1:3000",     # Next.js default port (IPv4)
-        "http://localhost:3001",      # Alternative Next.js port
-        "http://127.0.0.1:3001",     # Alternative Next.js port (IPv4)
-        "http://localhost:8000",      # Backend server (for direct testing)
-        "http://127.0.0.1:8000",     # Backend server (IPv4)
-        "https://localhost:3000",     # HTTPS (if using)
-        "https://127.0.0.1:3000",    # HTTPS (IPv4)
-        "http://localhost:3002",      # Additional Next.js port
-        "http://127.0.0.1:3002",     # Additional Next.js port (IPv4)
-        "http://localhost:3003",      # Additional Next.js port
-        "http://127.0.0.1:3003",     # Additional Next.js port (IPv4)
-        "http://localhost:3004",      # Additional Next.js port
-        "http://127.0.0.1:3004",     # Additional Next.js port (IPv4)
-        "http://localhost:3005",      # Additional Next.js port
-        "http://127.0.0.1:3005",     # Additional Next.js port (IPv4)
-        "http://localhost:3006",      # Additional Next.js port
-        "http://127.0.0.1:3006",     # Additional Next.js port (IPv4)
-        "http://localhost:3007",      # Additional Next.js port
-        "http://127.0.0.1:3007",     # Additional Next.js port (IPv4)
-        "http://localhost:3008",      # Additional Next.js port
-        "http://127.0.0.1:3008",     # Additional Next.js port (IPv4)
-        "http://localhost:3009",      # Additional Next.js port
-        "http://127.0.0.1:3009",     # Additional Next.js port (IPv4)
-        "http://localhost:3010",      # Additional Next.js port
-        "http://127.0.0.1:3010",     # Additional Next.js port (IPv4)
-        "https://*.vercel.app",       # Vercel deployments
-    ],
+    allow_origins=all_origins,
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allow_headers=["*"],
@@ -83,7 +93,7 @@ def on_startup():
 
 
 app.include_router(users.router, prefix="/api/users", tags=["users"])
-app.include_router(tasks.router, prefix="/api/tasks", tags=["tasks"])  # Changed from /api/users to /api/tasks
+app.include_router(tasks.router, prefix="/api", tags=["tasks"])  # Tasks endpoints already include /tasks in their definition
 app.include_router(auth.router, prefix="/api", tags=["auth"])
 app.include_router(chat.router, prefix="/api/chat", tags=["chat"])
 

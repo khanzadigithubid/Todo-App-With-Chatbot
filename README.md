@@ -1,4 +1,4 @@
-# Hackathon II: Todo App With Chatbot - Evolution from CLI to Cloud-Native AI
+# Todo App With Chatbot - Evolution from CLI to Cloud-Native AI
 
 ## Project Overview
 
@@ -135,6 +135,7 @@ npm install
 
 6. Create a `.env.local` file in the frontend directory:
 ```env
+NEXT_PUBLIC_LOCAL_API_URL=http://127.0.0.1:8000
 NEXT_PUBLIC_API_BASE_URL=http://127.0.0.1:8000
 NEXT_PUBLIC_BETTER_AUTH_URL=http://localhost:3000
 ```
@@ -169,6 +170,49 @@ dapr init -k
 ```bash
 helm install todo-app ./charts/todo-app -f ./k8s/local-values.yaml
 ```
+
+## Deployment Instructions (Vercel & Production)
+
+### Environment Variables for Production
+
+For successful deployment, ensure the following environment variables are set in your production environment:
+
+#### Frontend Environment Variables (Vercel/Netlify):
+```
+NEXT_PUBLIC_LOCAL_API_URL=https://your-backend-domain.com
+NEXT_PUBLIC_API_BASE_URL=https://your-backend-domain.com
+NEXT_PUBLIC_PROD_API_URL=https://your-backend-domain.com
+PROD_BACKEND_URL=https://your-backend-domain.com
+```
+
+#### Backend Environment Variables:
+```
+DATABASE_URL=your_production_database_url
+BETTER_AUTH_SECRET=your_jwt_secret
+OPENAI_API_KEY=your_openai_api_key
+ALLOWED_ORIGINS=https://your-frontend-domain.com,https://your-frontend-domain.vercel.app
+```
+
+### Vercel Deployment Steps:
+
+1. Push your code to GitHub
+2. Connect your repository to Vercel
+3. In Vercel dashboard, add the environment variables under Settings > Environment Variables
+4. Deploy the project
+
+### Common Deployment Issues & Solutions:
+
+1. **"Failed to fetch" error**: Usually caused by missing environment variables or incorrect API URLs
+   - Ensure `NEXT_PUBLIC_*` variables are set in the deployment environment
+   - Verify the backend API is accessible from the deployed frontend
+
+2. **Authentication errors**: Often due to CORS issues or JWT configuration
+   - Check that `ALLOWED_ORIGINS` includes your frontend domain
+   - Ensure `BETTER_AUTH_SECRET` is the same in both frontend and backend
+
+3. **API endpoints returning 404**: May be due to incorrect routing
+   - Verify the API routes match between frontend and backend
+   - Check that the backend is properly deployed and accessible
 
 ## Spec-Driven Development
 
