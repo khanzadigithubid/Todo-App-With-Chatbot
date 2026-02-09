@@ -1,7 +1,7 @@
 // frontend/src/components/ChatInterface.tsx
 
 import { useState, useRef, useEffect } from 'react';
-import { chatApi } from '@/lib/api';
+import api from '@/lib/api';
 
 interface Message {
   id: string;
@@ -48,8 +48,8 @@ export default function ChatInterface({ userId }: ChatInterfaceProps) {
 
     try {
       // Send message to the backend
-      const response = await chatApi.sendMessage(inputValue);
-      
+      const response = await api.chatApi.sendMessage(inputValue);
+
       // Add assistant response to the chat
       const assistantMessage: Message = {
         id: Date.now().toString(),
@@ -61,7 +61,7 @@ export default function ChatInterface({ userId }: ChatInterfaceProps) {
       setMessages(prev => [...prev, assistantMessage]);
     } catch (error) {
       console.error('Error sending message:', error);
-      
+
       // Add error message to the chat
       const errorMessage: Message = {
         id: Date.now().toString(),

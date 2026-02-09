@@ -1,7 +1,7 @@
 // frontend/src/components/TaskList.tsx
 
 import { useState, useEffect } from 'react';
-import { taskApi } from '@/lib/api';
+import api from '@/lib/api';
 
 interface Task {
   id: string;
@@ -33,7 +33,7 @@ export default function TaskList({ userId }: TaskListProps) {
       setLoading(true);
       // In a real implementation, we would fetch tasks for the specific user
       // For now, we'll use a placeholder
-      const data = await taskApi.getTasks();
+      const data = await api.taskApi.getTasks();
       setTasks(data.tasks || []);
     } catch (err) {
       setError('Failed to fetch tasks');
@@ -63,7 +63,7 @@ export default function TaskList({ userId }: TaskListProps) {
                 {task.due_date && <span className="due-date">Due: {new Date(task.due_date).toLocaleDateString()}</span>}
               </div>
               <div className="task-actions">
-                <button 
+                <button
                   onClick={() => toggleTaskCompletion(task.id)}
                   className={`completion-btn ${task.completed ? 'completed' : ''}`}
                 >
@@ -80,7 +80,7 @@ export default function TaskList({ userId }: TaskListProps) {
 
   async function toggleTaskCompletion(taskId: string) {
     try {
-      await taskApi.toggleTaskCompletion(taskId);
+      await api.taskApi.toggleTaskCompletion(taskId);
       // Refresh the task list
       fetchTasks();
     } catch (err) {
@@ -90,7 +90,7 @@ export default function TaskList({ userId }: TaskListProps) {
 
   async function deleteTask(taskId: string) {
     try {
-      await taskApi.deleteTask(taskId);
+      await api.taskApi.deleteTask(taskId);
       // Refresh the task list
       fetchTasks();
     } catch (err) {
