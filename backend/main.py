@@ -6,9 +6,9 @@ import logging
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from sqlmodel import SQLModel
-from .database import engine
-from .api.endpoints import tasks, users, auth, chat
-from .middleware import JWTAuthMiddleware
+from backend.database import engine
+from backend.api.endpoints import tasks, users, auth, chat
+from backend.middleware import JWTAuthMiddleware
 
 # Load environment variables from .env file
 load_dotenv()
