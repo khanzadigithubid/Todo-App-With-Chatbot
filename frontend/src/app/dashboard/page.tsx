@@ -105,9 +105,9 @@ export default function DashboardPage() {
     setSearchTerm(query);
   };
 
-  const handleFilterChange = (filters: { status?: string; priority?: string }) => {
+  const handleFilterChange = useCallback((filters: { status?: string; priority?: string }) => {
     setFilterParams(filters);
-  };
+  }, []);
 
   const handleSelectedTasksChange = (selectedIds: string[]) => {
     setSelectedTaskIds(selectedIds);

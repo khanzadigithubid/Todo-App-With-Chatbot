@@ -1,61 +1,55 @@
-# Project Constitution: Hackathon II – The Evolution of Todo: Mastering Spec-Driven Development & Cloud Native AI
+# [PROJECT_NAME] Constitution
+<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
 
-This constitution governs the ENTIRE hackathon from Phase I (Console App) to Phase V (Cloud Deployment), simulating real-world software evolution. It ensures AI-native, spec-driven approach where engineer is "system architect" not "syntax writer".
+## Core Principles
 
-## Immutable Principles (Apply to All Phases, Never Change):
+### [PRINCIPLE_1_NAME]
+<!-- Example: I. Library-First -->
+[PRINCIPLE_1_DESCRIPTION]
+<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
 
-### Spec-Driven Development
-All code and infrastructure must be generated exclusively by Claude Code; no manual writing is allowed. Refine specifications until output is correct. Use Spec-Kit Plus for all specs, plans, tasks, and implementations. This ensures consistent, high-quality output that follows best practices.
+### [PRINCIPLE_2_NAME]
+<!-- Example: II. CLI Interface -->
+[PRINCIPLE_2_DESCRIPTION]
+<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
 
-### Reusable Intelligence  
-Every phase must create and reuse Claude Code Subagents and Agent Skills. For example, a CRUD subagent created in Phase I should be reusable in Phases II-V. The aim is to earn +200 bonus points by making skills modular and placing them in an agents/skills/ folder for easy access and maintenance.
+### [PRINCIPLE_3_NAME]
+<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
+[PRINCIPLE_3_DESCRIPTION]
+<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
 
-### Tech Stack Adherence
-Specific technology stack must be followed: UV for Python dependencies; Python 3.13+ with comprehensive type hints; Next.js 16+ with App Router for frontend; FastAPI for backend services; SQLModel ORM for database interactions; Neon Postgres DB for data storage; OpenAI Agents/ChatKit/MCP SDK for AI capabilities; Docker/Minikube/Helm for Kubernetes orchestration; Kafka (Redpanda) + Dapr for event-driven architecture; kubectl-ai/kagent/Gordon for AIOps automation.
+### [PRINCIPLE_4_NAME]
+<!-- Example: IV. Integration Testing -->
+[PRINCIPLE_4_DESCRIPTION]
+<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
 
-### Multi-Language Support
-Urdu language support must be added to user-facing components including console prompts, web UI elements, and chatbot responses for +100 bonus points. Voice commands for +200 bonus points should be implemented in Phase III and beyond for enhanced accessibility.
+### [PRINCIPLE_5_NAME]
+<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
+[PRINCIPLE_5_DESCRIPTION]
+<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
 
-### Monorepo Structure
-The project must follow a monorepo structure with the root containing .spec-kit/config.yaml, specs/ organized by features/api/database/ui, CLAUDE.md at root and in frontend/backend directories, frontend/, backend/, agents/, skills/, and docker-compose.yml. Reference specs using @specs/path.md notation for clear documentation and navigation.
+### [PRINCIPLE_6_NAME]
 
-### Code Quality & Cleanliness
-Follow SOLID principles, PEP 8 standards, with comprehensive tests using pytest. Design statelessly wherever possible (e.g., chat endpoints in Phase III). Implement graceful error handling and create beautiful user experiences with rich tables in console applications and Tailwind CSS in web interfaces.
 
-### Deployment & Operations
-Use Local Minikube for Phase IV and cloud platforms (DOKS/GKE/AKS) for Phase V. Generate Helm charts using kubectl-ai/kagent for consistent deployments. Implement CI/CD with GitHub Actions and establish comprehensive monitoring and logging solutions.
+[PRINCIPLE__DESCRIPTION]
 
-### Bonuses Integration
-Create Cloud-Native Blueprints via Agent Skills for +200 bonus points (e.g., spec-driven Kubernetes deployments). Target achieving full bonuses (600) by Phase V through strategic implementation of all bonus features.
+## [SECTION_2_NAME]
+<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
 
-### Documentation
-Maintain a comprehensive README.md with setup, run, and deploy instructions. Create CLAUDE.md with clear workflow documentation (e.g., "Implement @specs/features/task-crud.md"). Produce demo videos under 90 seconds per phase to showcase functionality and progress.
+[SECTION_2_CONTENT]
+<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
 
-## Constraints:
+## [SECTION_3_NAME]
+<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
 
-- No manual code or infrastructure writing is allowed; if Claude fails, refine the specification until it succeeds.
-- Authentication must use Better Auth with JWT starting from Phase II.
-- Feature progression: Basic features (5 CRUD operations) must be implemented in all phases; add Intermediate features (priorities, tags, search, filter, sort) plus Advanced features (recurring tasks, due dates, reminders) in Phase V.
-- Event-driven architecture using Kafka and Dapr must be implemented from Phase V onwards; implement pub/sub for reminders, recurring tasks, audits, and synchronization.
-- Use platforms such as WSL2 for Windows environments; leverage free tiers (Neon, Redpanda, DO $200 credit) for cost-effective development.
+[SECTION_3_CONTENT]
+<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
 
-## Governance:
+## Governance
+<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-- This constitution supersedes all other documentation; amendments can only occur via new /sp.constitution commands with proper version bump and rationale.
-- All specifications and plans must explicitly reference this constitution to maintain consistency.
-- Any violations of these principles must be documented in specs/amendments.md for audit and review purposes.
+[GOVERNANCE_RULES]
+<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
 
-## Success Checklist (For Full 1000 + 600 Points):
-
-- [ ] Spec-Driven: All code generated by Claude, complete specs history maintained.
-- [ ] Reusable: Subagents and skills effectively used across multiple phases.
-- [ ] Bonuses: Urdu language support, voice commands, and Blueprints properly implemented.
-- [ ] Deployments: Both Local Minikube and Cloud DOKS working correctly.
-- [ ] Features: All levels (Basic/Intermediate/Advanced) implemented by Phase V.
-
-## Version Information:
-
-- Version: 1.0 (December 2025)
-- Ratification Date: 2025-12-12
-- Last Amended Date: 2025-12-12
-- Constitution Version: 1.0.0
+**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
+<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
