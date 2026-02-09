@@ -1,55 +1,41 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+# Hackathon II: Todo App - Constitution
 
-## Core Principles
+## Project Overview
+This is a monorepo using GitHub Spec-Kit for spec-driven development of a Todo application that evolves from a simple console app to a cloud-native AI chatbot deployed on Kubernetes.
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+## Core Values
+1. **Spec-Driven Development**: All code must map to a validated specification
+2. **Clean Architecture**: Maintain clear separation of concerns
+3. **Security First**: Implement proper authentication and authorization
+4. **Scalability**: Design for horizontal scaling from the start
+5. **AI-First**: Integrate AI capabilities thoughtfully throughout
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+## Technology Stack Constraints
+- Frontend: Next.js 16+ (App Router), TypeScript, Tailwind CSS
+- Backend: Python FastAPI, SQLModel
+- Database: Neon Serverless PostgreSQL
+- Authentication: Better Auth with JWT
+- AI: OpenAI Agents SDK, MCP SDK
+- Infrastructure: Docker, Kubernetes, Helm Charts
+- Event Streaming: Kafka or Redpanda
+- Service Mesh: Dapr
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+## Security Requirements
+- All API endpoints must require JWT authentication
+- Never store secrets in code
+- Use environment variables for sensitive data
+- Implement proper input validation
+- Sanitize all user inputs
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+## Performance Expectations
+- API responses under 500ms
+- Frontend bundle size under 250KB
+- Database queries optimized with proper indexing
+- Caching implemented for frequently accessed data
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
-
-### [PRINCIPLE_6_NAME]
-
-
-[PRINCIPLE__DESCRIPTION]
-
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
-
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
-
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
-
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
-
-## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
-
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
-
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+## Code Quality Standards
+- Follow PEP 8 for Python code
+- Use TypeScript with strict mode
+- Write comprehensive unit tests (aim for 80%+ coverage)
+- Implement proper error handling
+- Include documentation for all public interfaces
